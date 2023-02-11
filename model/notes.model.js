@@ -27,14 +27,34 @@ exports.updateNote = (note, date, tag, id) => {
       detail: "invalid data type, please enter a valid data type",
     });
   }
+
   return db
-    .query(`SELECT * from notes WHERE note_id = $1`, [id])
-    .then(
+    .query(
       `UPDATE notes 
     SET note_text = $1, note_date = $2, note_tag = $3 WHERE note_id = $4 RETURNING *`,
       [note, date, tag, id]
     )
     .then((result) => {
       return result.rows[0];
+    });
+};
+
+exports.deleteNote = (id) => {
+  return db
+    .query(`SELECT * from notes WHERE note_id = $1`, [id])
+    .then((result) => {
+      if (!result.rows.length) {
+        return Promise.reject({
+          status: 404,
+          msg: `you cant delete a note that doesn't exist!`,
+          detail: "please try again",
+        });
+      } else {
+        db.query(`DELETE from notes WHERE note_id = $1`, [id]).then(
+          (result) => {
+            return result.rows;
+          }
+        );
+      }
     });
 };

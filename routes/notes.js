@@ -1,6 +1,11 @@
 const express = require("express");
 const db = require("../db");
-const { selectNotes, insertNote, updateNote } = require("../model/notes.model");
+const {
+  selectNotes,
+  insertNote,
+  updateNote,
+  deleteNote,
+} = require("../model/notes.model");
 const router = express.Router();
 
 //Get all notes
@@ -19,13 +24,26 @@ router.post("/", (req, res) => {
 });
 
 //Update a note
-router.put("/:id", (req, res, next) => {
+router.put("/:id", (req, res) => {
   const { note, date, tag } = req.body;
-  const id = req.params.id;
+  const { id } = req.params;
 
   updateNote(note, date, tag, id)
     .then((result) => {
       res.status(200).send({ updated: result });
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+//Delete a note
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  deleteNote(id)
+    .then((result) => {
+      res.status(204).send();
     })
     .catch((err) => {
       res.json(err);
