@@ -18,3 +18,23 @@ exports.insertNote = (note, date, tag) => {
       return result.rows;
     });
 };
+
+exports.updateNote = (note, date, tag, id) => {
+  if (note === undefined || typeof date !== "number") {
+    return Promise.reject({
+      status: 400,
+      msg: "bad request",
+      detail: "invalid data type, please enter a valid data type",
+    });
+  }
+  return db
+    .query(`SELECT * from notes WHERE note_id = $1`, [id])
+    .then(
+      `UPDATE notes 
+    SET note_text = $1, note_date = $2, note_tag = $3 WHERE note_id = $4 RETURNING *`,
+      [note, date, tag, id]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+};
