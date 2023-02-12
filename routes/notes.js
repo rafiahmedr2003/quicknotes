@@ -5,6 +5,7 @@ const {
   insertNote,
   updateNote,
   deleteNote,
+  selectNoteByID,
 } = require("../model/notes.model");
 const router = express.Router();
 
@@ -44,6 +45,19 @@ router.delete("/:id", (req, res) => {
   deleteNote(id)
     .then((result) => {
       res.status(204).send();
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
+
+//Get a note by note ID
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+
+  selectNoteByID(id)
+    .then((result) => {
+      res.status(200).send({ note: result });
     })
     .catch((err) => {
       res.json(err);

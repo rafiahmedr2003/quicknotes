@@ -58,3 +58,17 @@ exports.deleteNote = (id) => {
       }
     });
 };
+
+exports.selectNoteByID = (id) => {
+  return db
+    .query(`SELECT * FROM notes WHERE note_id = $1`, [id])
+    .then((result) => {
+      return result.rows.length === 0
+        ? Promise.reject({
+            status: 404,
+            msg: `that note doesnt exist!`,
+            detail: "please try again",
+          })
+        : result.rows[0];
+    });
+};
