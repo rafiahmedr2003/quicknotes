@@ -1,21 +1,14 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import "./App.css";
+import Notes from "./Components/Notes";
 
-function App() {
-  const [notes, setNotes] = useState(null);
-
-  useEffect(() => {
-    axios.get("http://localhost:9090/api/notes").then((res) => {
-      console.log(res.data.data);
-    });
-  });
-
+const App = () => {
   return (
     <div className="App">
-      <p>hello</p>
+      <div className="NotesWrapper">
+        <Notes />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
