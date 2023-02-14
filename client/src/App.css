@@ -6,7 +6,8 @@
 }
 
 .NotesWrapper {
-  margin-top: 80px; /* Adjust this value to match the height of your navbar */
+  margin-top: 140px;
+  /* Adjust this value to match the height of your navbar */
   padding-bottom: 40px; /* Adjust this value as needed */
   position: absolute;
   top: 50%;
