@@ -1,8 +1,7 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import { useState } from "react";
 import { postNote } from "../services/api";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const PostNoteModal = ({ show, handleClose, handleRefresh }) => {
   const [noteText, setNoteText] = useState("");
@@ -20,7 +19,7 @@ const PostNoteModal = ({ show, handleClose, handleRefresh }) => {
     });
     toast.success("Note posted successfully!", {
       position: toast.POSITION.TOP_CENTER,
-      autoClose: 2000,
+      autoClose: 500,
       onClose: () => {
         handleRefresh();
         handleClose();
@@ -30,7 +29,6 @@ const PostNoteModal = ({ show, handleClose, handleRefresh }) => {
 
   return (
     <>
-      <ToastContainer />
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>Post a Note</Modal.Title>

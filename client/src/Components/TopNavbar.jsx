@@ -1,6 +1,15 @@
 import { Navbar, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const TopNavbar = ({ handleRefresh, handlePostNote }) => {
+  const handleRefreshClick = () => {
+    handleRefresh();
+    toast.success("Notes refreshed!", {
+      position: "top-center",
+      autoClose: 500,
+    });
+  };
+
   return (
     <Navbar bg="light" expand="lg" style={{ justifyContent: "space-between" }}>
       <Navbar.Brand
@@ -20,7 +29,7 @@ const TopNavbar = ({ handleRefresh, handlePostNote }) => {
           paddingRight: "20px",
         }}
       >
-        <Button variant="outline-primary" onClick={handleRefresh}>
+        <Button variant="outline-primary" onClick={handleRefreshClick}>
           Refresh
         </Button>
         <Button

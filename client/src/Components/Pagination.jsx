@@ -2,9 +2,7 @@ import { Button } from "react-bootstrap";
 
 const Pagination = ({
   chunkedNotes,
-  setChunkedNotes,
   currentPage,
-  setCurrentPage,
   handlePrevPage,
   handleNextPage,
 }) => {
