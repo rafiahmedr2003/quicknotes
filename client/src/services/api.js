@@ -21,3 +21,9 @@ export const deleteNote = (id) => {
     return res;
   });
 };
+
+export const updateNote = (id, input) => {
+  return api.put(`/${id}`, input).then((res) => {
+    return res.data;
+  });
+};
