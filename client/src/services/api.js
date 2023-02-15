@@ -9,3 +9,9 @@ export const getNotes = () => {
     return res.data;
   });
 };
+
+export const postNote = (input) => {
+  return api.post("/", input).then((res) => {
+    return res.data;
+  });
+};
