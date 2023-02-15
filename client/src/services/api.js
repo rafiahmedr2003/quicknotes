@@ -15,3 +15,9 @@ export const postNote = (input) => {
     return res.data;
   });
 };
+
+export const deleteNote = (id) => {
+  return api.delete(`/${id}`).then((res) => {
+    return res;
+  });
+};

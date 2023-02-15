@@ -30,7 +30,11 @@ const App = () => {
         handlePostNote={handlePostNote}
       />
       <div className="NotesWrapper">
-        <Notes notes={notes} setNotes={setNotes} />
+        <Notes
+          notes={notes}
+          setNotes={setNotes}
+          handleRefresh={handleRefresh}
+        />
       </div>
       <PostNoteModal
         show={showModal}
