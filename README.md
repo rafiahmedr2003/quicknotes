@@ -18,16 +18,17 @@ Install the dependencies required for the project. The client folder contains th
 npm install
 cd client
 npm install
+cd ..
 ```
 
 ### Environment Variables
 
-Create an env file and specify the database
+Create an env file and specify the database. 
 
 ```
-cd ..
 echo 'PGDATABASE=quick_notes' > ./.env
 ```
+Ensure the env file is created in the root folder quicknotes and not in the client folder.
 
 ### Seeding
 
