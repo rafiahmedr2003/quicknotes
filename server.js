@@ -1,28 +1,25 @@
 const express = require("express");
-const path = require("path");
-const cors = require("cors");
 const notesRouter = require("./routes/notes");
+const corsMiddleware = require("./middleware/corsMiddleware");
+const errorHandler = require("./middleware/errorHandler");
+const serveStaticFiles = require("./middleware/staticMiddleware");
 
 const app = express();
-const port = process.env.PORT || 9090;
 
-//Static folder
-app.use(express.static(path.join(__dirname, "client/build")));
-
+//Middleware
+app.use(serveStaticFiles());
 app.use(express.json());
+app.use(corsMiddleware);
 
-// cors middleware
-app.use(
-  cors({
-    origin: ["http://localhost:9090", "http://localhost:3000"],
-    credentials: true,
-  })
-);
-
+//Routes
 app.get("/", (req, res) => {
   res.json({ message: "health check ok" });
 });
-
 app.use("/api/notes", notesRouter);
 
+//Error Handling
+app.use(errorHandler);
+
+//Server Listening
+const port = process.env.PORT || 9090;
 app.listen(port, () => console.log(`Server listening on port ${port}`));
