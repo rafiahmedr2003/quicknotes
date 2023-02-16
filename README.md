@@ -54,7 +54,7 @@ Open a new terminal to open the front-end application server alongside the back-
 
 ```bash
 cd client
-npm run dev
+npm start
 ```
 
 Visit `http://localhost:3000`
