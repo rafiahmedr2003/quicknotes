@@ -1,74 +1,64 @@
 const db = require("../db");
 
-exports.selectNotes = () => {
-  let queryStr = `SELECT * from notes`;
-
-  return db.query(queryStr).then((result) => {
-    return result.rows;
-  });
+exports.selectNotes = async () => {
+  const result = await db.query(`SELECT * from notes`);
+  if (result.rows.length === 0) {
+    throw new Error("No notes found");
+  }
+  return result.rows;
 };
 
-exports.insertNote = (note, date, tag) => {
-  return db
-    .query(
+exports.insertNote = async (note, date, tag) => {
+  try {
+    const result = await db.query(
       `INSERT into notes(note_text, note_date, note_tag) VALUES ($1, $2, $3) RETURNING * `,
       [note, date, tag]
-    )
-    .then((result) => {
-      return result.rows;
-    });
+    );
+    return result.rows;
+  } catch (error) {
+    if (error.code === "22P02" || error.code === "22007") {
+      throw new Error("Invalid parameter value or date format");
+    }
+    throw new Error("Error inserting note");
+  }
 };
 
-exports.updateNote = (note, date, tag, id) => {
+exports.updateNote = async (note, date, tag, id) => {
   if (note === undefined || typeof date !== "number") {
-    return Promise.reject({
-      status: 400,
-      msg: "bad request",
-      detail: "invalid data type, please enter a valid data type",
-    });
+    throw new Error("Bad request");
   }
 
-  return db
-    .query(
-      `UPDATE notes 
+  const result = await db.query(
+    `UPDATE notes 
     SET note_text = $1, note_date = $2, note_tag = $3 WHERE note_id = $4 RETURNING *`,
-      [note, date, tag, id]
-    )
-    .then((result) => {
-      return result.rows[0];
-    });
+    [note, date, tag, id]
+  );
+  if (result.rowCount === 0) {
+    throw new Error("Note not found");
+  }
+  return result.rows[0];
 };
 
-exports.deleteNote = (id) => {
-  return db
-    .query(`SELECT * from notes WHERE note_id = $1`, [id])
-    .then((result) => {
-      if (!result.rows.length) {
-        return Promise.reject({
-          status: 404,
-          msg: `you cant delete a note that doesn't exist!`,
-          detail: "please try again",
-        });
-      } else {
-        db.query(`DELETE from notes WHERE note_id = $1`, [id]).then(
-          (result) => {
-            return result.rows;
-          }
-        );
-      }
-    });
+exports.deleteNote = async (id) => {
+  const result = await db.query(`SELECT * from notes WHERE note_id = $1`, [id]);
+  if (result.rows.length === 0) {
+    throw new Error("Note not found");
+  }
+  const deleteResult = await db.query(`DELETE from notes WHERE note_id = $1`, [
+    id,
+  ]);
+  if (deleteResult.rowCount === 0) {
+    throw new Error("Failed to delete note");
+  }
+  return deleteResult.rows;
 };
 
-exports.selectNoteByID = (id) => {
-  return db
-    .query(`SELECT * FROM notes WHERE note_id = $1`, [id])
-    .then((result) => {
-      return result.rows.length === 0
-        ? Promise.reject({
-            status: 404,
-            msg: `that note doesnt exist!`,
-            detail: "please try again",
-          })
-        : result.rows[0];
-    });
+exports.selectNoteByID = async (id) => {
+  const result = await db.query(`SELECT * FROM notes WHERE note_id = $1`, [id]);
+  if (result.rows.length === 0) {
+    const err = new Error(`Note with ID ${id} not found`);
+    err.id = id;
+    throw err;
+  }
+  return result.rows[0];
 };
